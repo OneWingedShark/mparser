@@ -1,0 +1,32 @@
+with "opentoken.gpr";
+
+project Mparser is
+
+   package Ide is
+      for Vcs_Kind use "Git";
+      for Documentation_Dir use "doc";
+   end Ide;
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("mparse.adb");
+
+   package Builder is
+      for Default_Switches ("ada") use ("-j4", "-s", "-g");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-O3", "-gnato", "-fstack-check", "-gnatE", "-gnata", "-g", "-gnat12", "-ffunction-sections", "-fdata-sections", "-funroll-loops", "-gnatn");
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-shared");
+   end Binder;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-Wl,--gc-sections", "-g");
+   end Linker;
+
+end Mparser;
+
