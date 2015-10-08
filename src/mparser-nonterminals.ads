@@ -32,10 +32,37 @@ Package MParser.Nonterminals is
    ExtSyntax             : aliased Class  := Get (p_ExtSyntax);
    FormalList            : aliased Class  := Get (p_FormalList);
    IntLit                : aliased Class  := Get (p_IntLit);
-
+   StrLit                : aliased Class  := Get (p_StrLit);
+   NumLit                : aliased Class  := Get (p_NumLit);
+   ExtID                 : aliased Class  := Get (p_ExtID);
+   ExtText               : aliased Class  := Get (p_ExtText);
+   Expr                  : aliased Class  := Get (p_Expr);
+   ExprTail              : aliased Class  := Get (p_ExprTail);
+   ExprAtom              : aliased Class  := Get (p_ExprAtom);
+   ExprItem              : aliased Class  := Get (p_ExprItem);
+   UnaryOp               : aliased Class  := Get (p_UnaryOp);
+   BinaryOp              : aliased Class  := Get (p_BinaryOp);
+   TruthOp               : aliased Class  := Get (p_TruthOp);
+   LogicalOp             : aliased Class  := Get (p_LogicalOp);
+   Relation              : aliased Class  := Get (p_Relation);
+   Pattern               : aliased Class  := Get (p_Pattern);
+   ExFunc                : aliased Class  := Get (p_ExFunc);
+   ExVar                 : aliased Class  := Get (p_ExVar);
+   glvn                  : aliased Class  := Get (p_glvn);
+   svn                   : aliased Class  := Get (p_svn);
+   lvn                   : aliased Class  := Get (p_lvn);
+   gvn                   : aliased Class  := Get (p_gvn);
+   ssvn                  : aliased Class  := Get (p_ssvn);
+   rlvn                  : aliased Class  := Get (p_rlvn);
+   rgvn                  : aliased Class  := Get (p_rgvn);
+   lnamind               : aliased Class  := Get (p_lnamind);
+   gnamind               : aliased Class  := Get (p_gnamind);
+   rexpratom             : aliased Class  := Get (p_rexpratom);
 
    -- Intermediates / Helpers
    Pct_or_Ident          : aliased Class  := Get (I_Pct_or_Ident);
    Digit_or_Ident        : aliased Class  := Get (I_Digit_or_Ident);
+   Ext_Subtext           : aliased Class  := Get (I_Ext_Subtext);
+   Embed_Name            : aliased Class  := Get (I_Embed_Name);
 
 End MParser.Nonterminals;

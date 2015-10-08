@@ -34,7 +34,9 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
    Seq_of_Space,
    Seq_of_LI,
    Seq_of_Graphic,
-   Seq_of_Digit
+   Seq_of_Digit,
+   Seq_of_Ext_Subtext,
+   Seq_of_ExprTail
    : Production_List.Instance;
 
    -- Sequence nonterminals.
@@ -50,20 +52,30 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Sequence_Builder(S_Graphic, Graphic, Seq_of_Graphic);
    Digit_Seq : aliased Nonterminal.Class:=
      Sequence_Builder(S_Digit, Digit, Seq_of_Digit);
+   Ext_Subtext_Seq : aliased Nonterminal.Class:=
+     Sequence_Builder(S_Ext_Subtext, Ext_Subtext, Seq_of_Ext_Subtext);
+   Exprtail_Seq : aliased Nonterminal.Class:=
+     Sequence_Builder(S_ExprTail, ExprTail, Seq_of_ExprTail);
 
    -- List production-lists.
-   List_of_Name
+   List_of_Name,
+   List_of_Expr
    : Production_List.Instance;
 
    -- List nonterminals.
    Name_List : aliased Nonterminal.Class:=
      Make_List(L_Name, Name, List_of_Name);
+   Expr_List : aliased Nonterminal.Class:=
+     Make_List(L_Expr, Expr, List_of_Expr);
+
 
    -- Optional production-lists.
    Option_of_Label,
    Option_of_LI_Seq,
    Option_of_SP_Seq,
-   Option_of_Name_List
+   Option_of_Name_List,
+   Option_of_Exptail_Seq,
+   Option_of_Tick
    : Production_List.Instance;
 
    -- Optional nonterminals.
@@ -75,6 +87,11 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Option_Builder(O_SP_Seq, Space_Seq, Option_of_SP_Seq);
    Opt_Name_List : aliased Nonterminal.Class:=
      Option_Builder(O_Name_List, Name_List, Option_of_Name_List);
+   Opt_Exprtail_Seq : aliased Nonterminal.Class:=
+     Option_Builder(O_Exprtail_Seq, Exprtail_Seq, Option_of_Exptail_Seq);
+   Opt_Tick : aliased Nonterminal.Class:=
+     Option_Builder(O_Tick, Tick, Option_of_Tick);
+
 
    -- Renames.
    LS : Nonterminal.Class renames Space_Seq;
@@ -100,6 +117,30 @@ Begin
      Line		<= formalline					and
      Label		<= name						and
      Label		<= intlit					and
+     Embed_Name		<= Graphic_Seq					and
+     UnaryOp		<= Tick						and
+     UnaryOp		<= Plus						and
+     UnaryOp		<= Hyphen					and
+     BinaryOp		<= Underscore					and
+     BinaryOp		<= Plus						and
+     BinaryOp		<= Hyphen					and
+     BinaryOp		<= Star						and
+     BinaryOp		<= Slash					and
+     BinaryOp		<= Pound					and
+     BinaryOp		<= Backslash					and
+     BinaryOp		<= DoubleStar					and
+     TruthOp		<= Relation					and
+     TruthOp		<= LogicalOp					and
+     LogicalOp		<= Amp						and
+     LogicalOp		<= Exclaimation					and
+     Relation		<= Equal					and
+     Relation		<= Less_Than					and
+     Relation		<= Greater_Than					and
+     Relation		<= LBracket					and
+     Relation		<= RBracket					and
+     Relation		<= DoubleRBracket				and
+     -- Artificial nonterminals / helpers.
+     Ext_Subtext	<= eol & Amp & ls & Graphic_Seq			and
      -- Sequences.
      Seq_of_Digit_or_Ident and
      Seq_of_Line	   and
@@ -107,13 +148,18 @@ Begin
      Seq_of_LI		   and
      Seq_of_Graphic	   and
      Seq_of_Digit	   and
+     Seq_of_Ext_Subtext	   and
+     Seq_of_ExprTail	   and
      -- Optionals.
      Option_of_Label	   and
      Option_of_Name_List   and
      Option_of_LI_Seq	   and
      Option_of_SP_Seq	   and
+     Option_of_Exptail_Seq and
+     Option_of_Tick	   and
      -- Lists.
      List_of_Name	   and
+     List_of_Expr	   and
      -- Normal Productions.
      routine		<= routinehead & routinebody			and
      routinehead	<= routinename & EOL				and
@@ -131,7 +177,41 @@ Begin
      formalline		<= label & formallist & ls & linebody		and
      formallist		<= LParen & Opt_Name_List & RParen		and
      intlit		<= Digit_Seq					and
-
+     extsyntax		<= Amp & extid & LParen & exttext & RParen	and
+     exttext		<= Graphic_Seq & Ext_Subtext_Seq		and
+     extid		<= Bar & Embed_Name & Bar			and
+     expr		<= expratom & Opt_exprtail_Seq			and
+     exprtail		<= binaryop & expratom				and
+     exprtail		<= Opt_Tick & truthop & expratom		and
+     exprtail		<= Opt_Tick & Question & pattern		and
+     expratom		<= glvn						and
+     expratom		<= expritem					and
+     expritem		<= strlit					and
+     expritem		<= numlit					and
+     expritem		<= exfunc					and
+     expritem		<= exvar					and
+     expritem		<= svn						and
+--       expritem		<= general_function				and
+     expritem		<= unaryop & expratom				and
+     expritem		<= LParen & expr & RParen			and
+     glvn		<= lvn						and
+     glvn		<= gvn						and
+     glvn		<= ssvn						and
+     lvn		<= rlvn						and
+--       lvn		<= @ expratom V lvn				and
+     rlvn		<= name						and
+     rlvn		<= name & LParen & Expr_List & RParen		and
+     rlvn		<= At_Sign & lnamind & At_Sign &
+                             LParen & Expr_List & RParen		and
+--       lnamind		<= rexpratom V lvn
+     rexpratom		<= rlvn						and
+     rexpratom		<= rgvn						and
+     rexpratom		<= expritem					and
+     rgvn		<= Caret & LParen & Expr_List & RParen		and
+--       rgvn		<= ^ [ | environment | ] name [ ( L expr ) ]
+     rgvn		<= At_Sign & gnamind & At_Sign &
+                             LParen &  Expr_List & RParen		and
+--       gnamind		<= rexpratom V gvn
 
      Temp_Token		<= EOF;
 --       Token		<= Basic_Token				and
