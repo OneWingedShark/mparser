@@ -41,14 +41,102 @@ Package MParser with Pure is
       t_Quote,		-- '"'
       t_E,		-- 'E'
       t_Dollar,		-- '$'
+      t_Colon,		-- ':'
       t_Digit,		-- '0'..'9'
       t_Ident,		-- 'A'-'Z' & 'a'-'z' & 128+
       t_Control,	-- 0..31 & 127
       t_Graphic,	-- ~t_Control
       t_String,
+
+      -- Short Commands
+      c_B,
+      c_C,
+      c_D,
+      c_E,
+      c_F,
+      c_G,
+      c_H1,
+      c_H2,
+      c_I,
+      c_J,
+      c_K,
+      c_L,
+      c_M,
+      c_N,
+      c_O,
+      c_Q,
+      c_R,
+      c_S,
+      c_TC,
+      c_TRE,
+      c_TRO,
+      c_TS,
+      c_U,
+      c_V,
+      c_W,
+      c_X,
+      c_Z,
+
+      -- Long Commands
+      c_BREAK,
+      c_CLOSE,
+      c_DO,
+      c_ELSE,
+      c_FOR,
+      c_GOTO,
+      c_HALT,
+      c_HANG,
+      c_IF,
+      c_JOB,
+      c_KILL,
+      c_LOCK,
+      c_MERGE,
+      c_NEW,
+      c_OPEN,
+      c_QUIT,
+      c_READ,
+      c_SET,
+      c_TCOMMIT,
+      c_TRESTART,
+      c_TROLLBACK,
+      c_TSTART,
+      c_USE,
+      c_VIEW,
+      c_WRITE,
+      c_XECUTE,
+
       Epsilon,		-- Epsiolon is the null-string component; used to make things optional.
       Bad_Token,
       End_of_File,
+
+      -- Commands
+      Command_BREAK,
+      Command_CLOSE,
+      Command_DO,
+      Command_ELSE,
+      Command_FOR,
+      Command_GOTO,
+      Command_HALT,
+      Command_HANG,
+      Command_IF,
+      Command_JOB,
+      Command_KILL,
+      Command_LOCK,
+      Command_MERGE,
+      Command_NEW,
+      Command_OPEN,
+      Command_QUIT,
+      Command_READ,
+      Command_SET,
+      Command_TCOMMIT,
+      Command_TRESTART,
+      Command_TROLLBACK,
+      Command_TSTART,
+      Command_USE,
+      Command_VIEW,
+      Command_WRITE,
+      Command_XECUTE,
+      Command_Z,
 
       -- Intermediate nonterminals
       I_Pct_or_Ident,
@@ -57,7 +145,10 @@ Package MParser with Pure is
       I_Embed_Name,
       I_Paren_Expr_List,
       I_Env_Bar,
---      I_Lvl_or_Fml,
+      I_Colon_TVExpr,
+      I_Caret_Routineref,
+      I_Plus_IntExpr,
+      I_DotExpr_or_AName,
 
       -- Option nonterminals
       O_Label,
@@ -70,6 +161,10 @@ Package MParser with Pure is
       O_Paren_Expr_List,
       O_Env_Bar,
       O_Exponent,
+      O_Colon_TVExpr,
+      O_Caret_Routineref,
+      O_Plus_IntExpr,
+      O_DotExpr_or_AName,
 
       -- Sequences
       S_Digit_or_Ident,
@@ -138,8 +233,18 @@ Package MParser with Pure is
       p_tvexpr,
       p_intexpr,
       p_labelref,
+      p_lineref,
+      p_entryref,
       p_externref,
       p_actuallist,
+      p_timeout,
+      p_postcond,
+      p_dlabel,
+      p_routineref,
+      p_externalroutinename,
+      p_packagename,
+      p_actualname,
+      p_actual,
 
       p_tmp_1
      );

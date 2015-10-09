@@ -28,6 +28,14 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      ) return Nonterminal.Class is
      (List_Builder(Token_ID, Comma, Item, Productions, List_Action));
 
+
+   -- NOTE:	when we move the sequences, lists, and options to nonterminals,
+   --		we can hide the individual production-lists and expose "and"-ed
+   --		collections to the package spec.
+   --	Production_List_for_Sequences,
+   --	Production_List_for_Lists,
+   --	Production_List_for_Optionals : constant Production_List.Instance;
+
    -- Sequence production-lists.
    Seq_of_Digit_or_Ident,
    Seq_of_Line,
@@ -79,7 +87,11 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
    Option_of_Environment,
    Option_of_PrnExpr_Lst,
    Option_of_Env_Bar,
-   Option_of_Exponent
+   Option_of_Exponent,
+   Option_of_ColonTVExpr,
+   Option_of_Crt_RtnRef,
+   Option_of_PlusIntExpr,
+   Option_of_DtExp_AName
    : Production_List.Instance;
 
    -- Optional nonterminals.
@@ -103,6 +115,14 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Option_Builder(O_Env_Bar, Env_Bar, Option_of_Env_Bar);
    Opt_Exponent : aliased Nonterminal.Class:=
      Option_Builder(O_Exponent, exponent, Option_of_Exponent);
+   Opt_Colon_TVExpr : aliased Nonterminal.Class:=
+     Option_Builder(O_Colon_TVExpr, Colon_TVExpr, Option_of_ColonTVExpr);
+   Opt_Caret_Routineref : aliased Nonterminal.Class:=
+     Option_Builder(O_Caret_Routineref, Caret_Routineref, Option_of_Crt_RtnRef);
+   Opt_Plus_IntExpr : aliased Nonterminal.Class:=
+     Option_Builder(O_Plus_IntExpr, Plus_IntExpr, Option_of_PlusIntExpr);
+   Opt_DotExpr_or_AName : aliased Nonterminal.Class:=
+     Option_Builder(O_DotExpr_or_AName, DotExpr_or_AName, Option_of_DtExp_AName);
 
    -- Renames.
    LS : Nonterminal.Class renames Space_Seq;
@@ -174,6 +194,10 @@ Begin
      Option_of_PrnExpr_Lst and
      Option_of_Env_Bar	   and
      Option_of_Exponent	   and
+     Option_of_ColonTVExpr and
+     Option_of_Crt_RtnRef  and
+     Option_of_PlusIntExpr and
+     Option_of_DtExp_AName and
      -- Lists.
      List_of_Name	   and
      List_of_Expr	   and
@@ -248,6 +272,85 @@ Begin
      -- TODO: Take a look at Dfn of namevalue; ensure the following is correct.
      namevalue		<= expr						and
      -- TODO: 7.2.3 Pattern match pattern
+
+     cmd_BREAK		<= LC_BREAK					and
+     cmd_BREAK		<= SC_BREAK					and
+     cmd_CLOSE		<= LC_CLOSE					and
+     cmd_CLOSE		<= SC_CLOSE					and
+     cmd_DO		<= LC_DO					and
+     cmd_DO		<= SC_DO					and
+     cmd_ELSE		<= LC_ELSE					and
+     cmd_ELSE		<= SC_ELSE					and
+     cmd_FOR		<= LC_FOR					and
+     cmd_FOR		<= SC_FOR					and
+     cmd_GOTO		<= LC_GOTO					and
+     cmd_GOTO		<= SC_GOTO					and
+     cmd_HALT		<= LC_HALT					and
+     cmd_HALT		<= SC_HALT					and
+     cmd_HANG		<= LC_HANG					and
+     cmd_HANG		<= SC_HANG					and
+     cmd_IF		<= LC_IF					and
+     cmd_IF		<= SC_IF					and
+     cmd_JOB		<= LC_JOB					and
+     cmd_JOB		<= SC_JOB					and
+     cmd_KILL		<= LC_KILL					and
+     cmd_KILL		<= SC_KILL					and
+     cmd_LOCK		<= LC_LOCK					and
+     cmd_LOCK		<= SC_LOCK					and
+     cmd_MERGE		<= LC_MERGE					and
+     cmd_MERGE		<= SC_MERGE					and
+     cmd_NEW		<= LC_NEW					and
+     cmd_NEW		<= SC_NEW					and
+     cmd_OPEN		<= LC_OPEN					and
+     cmd_OPEN		<= SC_OPEN					and
+     cmd_QUIT		<= LC_QUIT					and
+     cmd_QUIT		<= SC_QUIT					and
+     cmd_READ		<= LC_READ					and
+     cmd_READ		<= SC_READ					and
+     cmd_SET		<= LC_SET					and
+     cmd_SET		<= SC_SET					and
+     cmd_TCOMMIT	<= LC_TCOMMIT					and
+     cmd_TCOMMIT	<= SC_TCOMMIT					and
+     cmd_TRESTART	<= LC_TRESTART					and
+     cmd_TRESTART	<= SC_TRESTART					and
+     cmd_TROLLBACK	<= LC_TROLLBACK					and
+     cmd_TROLLBACK	<= SC_TROLLBACK					and
+     cmd_TSTART		<= LC_TSTART					and
+     cmd_TSTART		<= SC_TSTART					and
+     cmd_USE		<= LC_USE					and
+     cmd_USE		<= SC_USE					and
+     cmd_VIEW		<= LC_VIEW					and
+     cmd_VIEW		<= SC_VIEW					and
+     cmd_WRITE		<= LC_WRITE					and
+     cmd_WRITE		<= SC_WRITE					and
+     cmd_XECUTE		<= LC_XECUTE					and
+     cmd_XECUTE		<= SC_XECUTE					and
+     cmd_Z		<= SC_Z						and
+     -- TODO: 8.1 General command rules (B) -- command ::= ...
+     postcond		<= Opt_Colon_TVExpr				and
+     timeout		<= Colon & numexpr				and
+     lineref		<= entryref					and
+     lineref		<= labelref					and
+     entryref		<= dlabel &
+     			     Opt_Plus_IntExpr & Opt_Caret_Routineref	and
+     entryref		<= Caret_Routineref				and
+     dlabel		<= label					and
+     --       dlabel		<= @ expratom V dlabel
+     routineref		<= Opt_Env_Bar & routinename			and
+     --       routineref		<= @ expratom V routineref
+     labelref		<= label					and
+     labelref		<= label & Caret & Opt_Env_Bar & routinename	and
+     labelref		<= caret & Opt_Env_Bar & routinename		and
+     externref		<= Amp & externalroutinename			and
+     externref		<= Amp & packagename &dot& externalroutinename	and
+     packagename	<= name						and
+     externalroutinename<= name						and
+     externalroutinename<= name & Caret & Name				and
+     --     actuallist		<= ( [ L actual ] )
+     actual		<= Opt_DotExpr_or_AName				and
+     actual		<= expr						and
+     actualname		<= name						and
+--       actualname		::= @ expratom V actualname
 
 
      Temp_Token		<= EOF;
