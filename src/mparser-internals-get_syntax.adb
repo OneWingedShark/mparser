@@ -2,6 +2,7 @@ with
 Ada.Characters.Latin_1,
 Ada.Strings.Maps.Constants,
 
+OpenToken.Recognizer.String,
 OpenToken.Recognizer.Character_Set,
 OpenToken.Recognizer.Graphic_Character,
 OpenToken.Recognizer.CSV_Field,
@@ -69,11 +70,14 @@ begin
       t_DoubleRBracket=>Separator( "]]" ),
       t_At_Sign	=>	Separator( +'@' ),
       t_Caret	=>	Separator( +'^' ),
+      t_Quote	=>	Separator( +'"' ),
+      t_E	=>	Separator( +'E' ),
+      t_Dollar	=>	Separator( +'$' ),
       t_Digit	=>	Character(Decimal_Digit_Set),
       t_Ident	=>	Character(Upper_Set or Lower_Set or High_Set),
       t_Control	=>	Character(Control_Set),
       t_Graphic	=>	Character(not Control_Set),
-
+      t_String	=>	Tokenizer.Get(R.String.Get),
 ---- STUFF FROM IDL SYNTAX THAT MIGHT BE USEFUL.
 ------------------------------------------------
 --

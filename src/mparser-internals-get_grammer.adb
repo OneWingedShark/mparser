@@ -75,7 +75,11 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
    Option_of_SP_Seq,
    Option_of_Name_List,
    Option_of_Exptail_Seq,
-   Option_of_Tick
+   Option_of_Tick,
+   Option_of_Environment,
+   Option_of_PrnExpr_Lst,
+   Option_of_Env_Bar,
+   Option_of_Exponent
    : Production_List.Instance;
 
    -- Optional nonterminals.
@@ -91,7 +95,14 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Option_Builder(O_Exprtail_Seq, Exprtail_Seq, Option_of_Exptail_Seq);
    Opt_Tick : aliased Nonterminal.Class:=
      Option_Builder(O_Tick, Tick, Option_of_Tick);
-
+   Opt_Environment : aliased Nonterminal.Class:=
+     Option_Builder(O_Environment, Environment, Option_of_Environment);
+   Opt_PrnExp_List : aliased Nonterminal.Class:=
+     Option_Builder(O_Paren_Expr_List, Paren_Expr_List, Option_of_PrnExpr_Lst);
+   Opt_Env_Bar : aliased Nonterminal.Class:=
+     Option_Builder(O_Env_Bar, Env_Bar, Option_of_Env_Bar);
+   Opt_Exponent : aliased Nonterminal.Class:=
+     Option_Builder(O_Exponent, exponent, Option_of_Exponent);
 
    -- Renames.
    LS : Nonterminal.Class renames Space_Seq;
@@ -141,6 +152,8 @@ Begin
      Relation		<= DoubleRBracket				and
      -- Artificial nonterminals / helpers.
      Ext_Subtext	<= eol & Amp & ls & Graphic_Seq			and
+     Paren_Expr_List	<= LParen & Expr_List & RParen			and
+     Env_Bar		<= Bar & Environment & Bar			and
      -- Sequences.
      Seq_of_Digit_or_Ident and
      Seq_of_Line	   and
@@ -157,6 +170,10 @@ Begin
      Option_of_SP_Seq	   and
      Option_of_Exptail_Seq and
      Option_of_Tick	   and
+     Option_of_Environment and
+     Option_of_PrnExpr_Lst and
+     Option_of_Env_Bar	   and
+     Option_of_Exponent	   and
      -- Lists.
      List_of_Name	   and
      List_of_Expr	   and
@@ -193,25 +210,45 @@ Begin
      expritem		<= svn						and
 --       expritem		<= general_function				and
      expritem		<= unaryop & expratom				and
-     expritem		<= LParen & expr & RParen			and
+     expritem		<= Paren_Expr_List				and
      glvn		<= lvn						and
      glvn		<= gvn						and
      glvn		<= ssvn						and
      lvn		<= rlvn						and
 --       lvn		<= @ expratom V lvn				and
      rlvn		<= name						and
-     rlvn		<= name & LParen & Expr_List & RParen		and
+     rlvn		<= name & Paren_Expr_List			and
      rlvn		<= At_Sign & lnamind & At_Sign &
-                             LParen & Expr_List & RParen		and
+				Paren_Expr_List				and
 --       lnamind		<= rexpratom V lvn
      rexpratom		<= rlvn						and
      rexpratom		<= rgvn						and
      rexpratom		<= expritem					and
-     rgvn		<= Caret & LParen & Expr_List & RParen		and
---       rgvn		<= ^ [ | environment | ] name [ ( L expr ) ]
-     rgvn		<= At_Sign & gnamind & At_Sign &
-                             LParen &  Expr_List & RParen		and
+     rgvn		<= Caret & Paren_Expr_List			and
+     rgvn		<= Caret & Opt_Env_Bar & name & Opt_PrnExp_List	and
+     rgvn		<= At_Sign&gnamind &At_Sign& Paren_Expr_List	and
 --       gnamind		<= rexpratom V gvn
+     environment	<= expr						and
+     strlit		<= String_Element				and
+     numlit		<= mant & opt_exponent				and
+     mant		<= intlit & dot & intlit			and
+     mant		<= dot & intlit					and
+     mant		<= intlit					and
+     exponent		<= E & Plus & IntLit				and
+     exponent		<= E & Hyphen & IntLit				and
+     -- TODO: 7.1.3 Structured system variable ssvn
+     numexpr		<= expr						and
+     intexpr		<= expr						and
+     tvexpr		<= expr						and
+     ExFunc		<= Dollar & Dollar & labelref & actuallist	and
+     ExFunc		<= Dollar & externref & actuallist		and
+     ExVar		<= Dollar & Dollar & labelref			and
+     ExVar		<= Dollar & externref				and
+     -- TODO: 7.1.4.10 Intrinsic special variable names svn
+     -- TODO: Take a look at Dfn of namevalue; ensure the following is correct.
+     namevalue		<= expr						and
+     -- TODO: 7.2.3 Pattern match pattern
+
 
      Temp_Token		<= EOF;
 --       Token		<= Basic_Token				and

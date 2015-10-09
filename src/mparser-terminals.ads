@@ -43,10 +43,14 @@ Package MParser.Terminals is
    DoubleRBracket        : aliased Class := Get (t_DoubleRBracket);
    At_Sign               : aliased Class := Get (t_At_Sign);
    Caret                 : aliased Class := Get (t_Caret);
+   Quote                 : aliased Class := Get (t_Quote);
+   E                     : aliased Class := Get (t_E);
+   Dollar                : aliased Class := Get (t_Dollar);
    Digit                 : aliased Class := Get (t_Digit);
    Ident                 : aliased Class := Get (t_Ident);
    Control               : aliased Class := Get (t_Control);
    Graphic               : aliased Class := Get (t_Graphic);
+   String_Element        : aliased Class := Get (t_String);
 
    -- Renames
    Space                 : Class renames SP;

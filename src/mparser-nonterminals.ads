@@ -21,6 +21,7 @@ Package MParser.Nonterminals is
    RoutineHead           : aliased Class  := Get (p_Routinehead);
    RoutineBody           : aliased Class  := Get (p_Routinebody);
    Name                  : aliased Class  := Get (P_Name);
+   NameValue             : aliased Class  := Get (P_NameValue);
    Line                  : aliased Class  := Get (p_line);
    FormalLine            : aliased Class  := Get (p_formalline);
    LevelLine             : aliased Class  := Get (p_Levelline);
@@ -58,11 +59,22 @@ Package MParser.Nonterminals is
    lnamind               : aliased Class  := Get (p_lnamind);
    gnamind               : aliased Class  := Get (p_gnamind);
    rexpratom             : aliased Class  := Get (p_rexpratom);
+   Environment           : aliased Class  := Get (p_Environment);
+   mant                  : aliased Class  := Get (p_mant);
+   exponent              : aliased Class  := Get (p_exponent);
+   numexpr               : aliased Class  := Get (p_numexpr);
+   tvexpr                : aliased Class  := Get (p_tvexpr);
+   intexpr               : aliased Class  := Get (p_intexpr);
+   labelref              : aliased Class  := Get (p_labelref);
+   externref             : aliased Class  := Get (p_externref);
+   actuallist            : aliased Class  := Get (p_actuallist);
 
    -- Intermediates / Helpers
    Pct_or_Ident          : aliased Class  := Get (I_Pct_or_Ident);
    Digit_or_Ident        : aliased Class  := Get (I_Digit_or_Ident);
    Ext_Subtext           : aliased Class  := Get (I_Ext_Subtext);
    Embed_Name            : aliased Class  := Get (I_Embed_Name);
+   Paren_Expr_List       : aliased Class  := Get (I_Paren_Expr_List);
+   Env_Bar               : aliased Class  := Get (I_Env_Bar);
 
 End MParser.Nonterminals;
