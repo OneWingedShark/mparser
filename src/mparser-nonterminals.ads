@@ -78,6 +78,25 @@ Package MParser.Nonterminals is
    packagename           : aliased Class  := Get (p_packagename);
    actualname            : aliased Class  := Get (p_actualname);
    actual                : aliased Class  := Get (p_actual);
+   CloseArgument         : aliased Class  := Get (p_CloseArgument);
+   DoArgument            : aliased Class  := Get (p_DoArgument);
+   ForParameter          : aliased Class  := Get (p_ForParameter);
+   GotoArgument          : aliased Class  := Get (p_GotoArgument);
+   HangArgument          : aliased Class  := Get (p_HangArgument);
+   IfArgument            : aliased Class  := Get (p_IfArgument);
+   JobArgument           : aliased Class  := Get (p_JobArgument);
+   KillArgument          : aliased Class  := Get (p_KillArgument);
+   LockArgument          : aliased Class  := Get (p_LockArgument);
+   MergeArgument         : aliased Class  := Get (p_MergeArgument);
+   newargument           : aliased Class  := Get (p_NewArgument);
+   openargument          : aliased Class  := Get (p_OpenArgument);
+   readargument          : aliased Class  := Get (p_ReadArgument);
+   setargument           : aliased Class  := Get (p_SetArgument);
+   tstartargument        : aliased Class  := Get (p_TStartArgument);
+   useargument           : aliased Class  := Get (p_UseArgument);
+   writeargument         : aliased Class  := Get (p_WriteArgument);
+   xecuteargument        : aliased Class  := Get (p_XecuteArgument);
+   charset               : aliased Class  := Get (p_charset);
 
    -- Intermediates / Helpers
    Pct_or_Ident          : aliased Class  := Get (I_Pct_or_Ident);
@@ -91,6 +110,7 @@ Package MParser.Nonterminals is
    Plus_IntExpr          : aliased Class  := Get (I_Plus_IntExpr);
    DotExpr_or_AName      : aliased Class  := Get (I_DotExpr_or_AName);
 
+   -- Nonterminals to handle short- and long-form commands.
    cmd_BREAK             : aliased Class  := Get (Command_BREAK);
    cmd_CLOSE             : aliased Class  := Get (Command_CLOSE);
    cmd_DO                : aliased Class  := Get (Command_DO);
@@ -119,5 +139,33 @@ Package MParser.Nonterminals is
    cmd_XECUTE            : aliased Class  := Get (Command_XECUTE);
    cmd_Z                 : aliased Class  := Get (Command_Z);
 
+   -- Nonterminals to handle the syntax of commands.
+   syn_BREAK             : aliased Class  := Get (Syntax_BREAK);
+   syn_CLOSE             : aliased Class  := Get (Syntax_CLOSE);
+   syn_DO                : aliased Class  := Get (Syntax_DO);
+   syn_ELSE              : aliased Class  := Get (Syntax_ELSE);
+   syn_FOR               : aliased Class  := Get (Syntax_FOR);
+   syn_GOTO              : aliased Class  := Get (Syntax_GOTO);
+   syn_HALT              : aliased Class  := Get (Syntax_HALT);
+   syn_HANG              : aliased Class  := Get (Syntax_HANG);
+   syn_IF                : aliased Class  := Get (Syntax_IF);
+   syn_JOB               : aliased Class  := Get (Syntax_JOB);
+   syn_KILL              : aliased Class  := Get (Syntax_KILL);
+   syn_LOCK              : aliased Class  := Get (Syntax_LOCK);
+   syn_MERGE             : aliased Class  := Get (Syntax_MERGE);
+   syn_NEW               : aliased Class  := Get (Syntax_NEW);
+   syn_OPEN              : aliased Class  := Get (Syntax_OPEN);
+   syn_QUIT              : aliased Class  := Get (Syntax_QUIT);
+   syn_READ              : aliased Class  := Get (Syntax_READ);
+   syn_SET               : aliased Class  := Get (Syntax_SET);
+   syn_TCOMMIT           : aliased Class  := Get (Syntax_TCOMMIT);
+   syn_TRESTART          : aliased Class  := Get (Syntax_TRESTART);
+   syn_TROLLBACK         : aliased Class  := Get (Syntax_TROLLBACK);
+   syn_TSTART            : aliased Class  := Get (Syntax_TSTART);
+   syn_USE               : aliased Class  := Get (Syntax_USE);
+   syn_VIEW              : aliased Class  := Get (Syntax_VIEW);
+   syn_WRITE             : aliased Class  := Get (Syntax_WRITE);
+   syn_XECUTE            : aliased Class  := Get (Syntax_XECUTE);
+   syn_Z                 : aliased Class  := Get (Syntax_Z);
 
 End MParser.Nonterminals;

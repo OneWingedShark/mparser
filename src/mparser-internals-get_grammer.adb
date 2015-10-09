@@ -67,7 +67,26 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
 
    -- List production-lists.
    List_of_Name,
-   List_of_Expr
+   List_of_Expr,
+   List_of_Actual,
+   List_of_Closeargument,
+   List_of_Doargument,
+   List_of_Forparameter,
+   List_of_Gotoargument,
+   List_of_Hangargument,
+   List_of_Ifargument,
+   List_of_Jobargument,
+   List_of_Killargument,
+   List_of_Lockargument,
+   List_of_Mergeargument,
+   List_of_Newargument,
+   List_of_Openargument,
+   List_of_Readargument,
+   List_of_Setargument,
+   List_of_Tstartarg,
+   List_of_Useargument,
+   List_of_Writeargument,
+   List_of_Xecutearg
    : Production_List.Instance;
 
    -- List nonterminals.
@@ -75,12 +94,50 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Make_List(L_Name, Name, List_of_Name);
    Expr_List : aliased Nonterminal.Class:=
      Make_List(L_Expr, Expr, List_of_Expr);
-
+   Actual_List : aliased Nonterminal.Class:=
+     Make_List(L_Actual, Actual, List_of_Actual);
+   Close_Arg_List : aliased Nonterminal.Class:=
+     Make_List(L_Close_Arg, CloseArgument, List_of_Closeargument);
+   Do_Arg_List : aliased Nonterminal.Class:=
+     Make_List(L_Do_Arg, DoArgument, List_of_Doargument);
+   forparameter_List : aliased Nonterminal.Class:=
+     Make_List(L_forparameter, ForParameter, List_of_Forparameter);
+   goto_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_gotoargument, gotoargument, List_of_gotoargument);
+   hang_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_hangargument, hangargument, List_of_hangargument);
+   if_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_ifargument, ifargument, List_of_ifargument);
+   job_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_jobargument, jobargument, List_of_jobargument);
+   kill_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_killargument, killargument, List_of_killargument);
+   lock_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_lockargument, lockargument, List_of_Lockargument);
+   merge_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_mergeargument, mergeargument, List_of_Mergeargument);
+   new_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_newargument, newargument, List_of_Newargument);
+   open_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_openargument, openargument, List_of_Openargument);
+   read_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_readargument, readargument, List_of_Readargument);
+   set_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_setargument, setargument, List_of_Setargument);
+   tstart_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_tstartargument, tstartargument, List_of_Tstartarg);
+   use_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_useargument, useargument, List_of_Useargument);
+   write_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_writeargument, writeargument, List_of_Writeargument);
+   xecute_arg_List : aliased Nonterminal.Class:=
+     Make_List(L_xecute, xecuteargument, List_of_Xecutearg);
 
    -- Optional production-lists.
    Option_of_Label,
    Option_of_LI_Seq,
    Option_of_SP_Seq,
+   Option_of_SP,
    Option_of_Name_List,
    Option_of_Exptail_Seq,
    Option_of_Tick,
@@ -91,7 +148,8 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
    Option_of_ColonTVExpr,
    Option_of_Crt_RtnRef,
    Option_of_PlusIntExpr,
-   Option_of_DtExp_AName
+   Option_of_DtExp_AName,
+   Option_of_Actual_List
    : Production_List.Instance;
 
    -- Optional nonterminals.
@@ -101,6 +159,8 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Option_Builder(O_LI_Seq, LI, Option_of_LI_Seq);
    Opt_SP_Seq : aliased Nonterminal.Class:=
      Option_Builder(O_SP_Seq, Space_Seq, Option_of_SP_Seq);
+   Opt_SP : aliased Nonterminal.Class:=
+     Option_Builder(O_SP, SP, Option_of_SP);
    Opt_Name_List : aliased Nonterminal.Class:=
      Option_Builder(O_Name_List, Name_List, Option_of_Name_List);
    Opt_Exprtail_Seq : aliased Nonterminal.Class:=
@@ -123,6 +183,8 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
      Option_Builder(O_Plus_IntExpr, Plus_IntExpr, Option_of_PlusIntExpr);
    Opt_DotExpr_or_AName : aliased Nonterminal.Class:=
      Option_Builder(O_DotExpr_or_AName, DotExpr_or_AName, Option_of_DtExp_AName);
+   Opt_actual_List : aliased Nonterminal.Class:=
+     Option_Builder(O_actual_List, Actual_List, Option_of_Actual_List);
 
    -- Renames.
    LS : Nonterminal.Class renames Space_Seq;
@@ -188,6 +250,7 @@ Begin
      Option_of_Name_List   and
      Option_of_LI_Seq	   and
      Option_of_SP_Seq	   and
+     Option_of_SP	   and
      Option_of_Exptail_Seq and
      Option_of_Tick	   and
      Option_of_Environment and
@@ -198,6 +261,7 @@ Begin
      Option_of_Crt_RtnRef  and
      Option_of_PlusIntExpr and
      Option_of_DtExp_AName and
+     Option_of_Actual_List and
      -- Lists.
      List_of_Name	   and
      List_of_Expr	   and
@@ -273,6 +337,8 @@ Begin
      namevalue		<= expr						and
      -- TODO: 7.2.3 Pattern match pattern
 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
      cmd_BREAK		<= LC_BREAK					and
      cmd_BREAK		<= SC_BREAK					and
      cmd_CLOSE		<= LC_CLOSE					and
@@ -326,6 +392,9 @@ Begin
      cmd_XECUTE		<= LC_XECUTE					and
      cmd_XECUTE		<= SC_XECUTE					and
      cmd_Z		<= SC_Z						and
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
      -- TODO: 8.1 General command rules (B) -- command ::= ...
      postcond		<= Opt_Colon_TVExpr				and
      timeout		<= Colon & numexpr				and
@@ -346,13 +415,55 @@ Begin
      packagename	<= name						and
      externalroutinename<= name						and
      externalroutinename<= name & Caret & Name				and
-     --     actuallist		<= ( [ L actual ] )
+     actuallist		<= LParen & Opt_actual_List & RParen	and
      actual		<= Opt_DotExpr_or_AName				and
      actual		<= expr						and
      actualname		<= name						and
 --       actualname		::= @ expratom V actualname
 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+     syn_BREAK		<= cmd_BREAK & postcond & Opt_SP		and
+     syn_CLOSE		<= cmd_CLOSE & postcond & SP & close_arg_List	and
+     syn_DO		<= cmd_DO & postcond & Opt_SP			and
+     syn_DO		<= cmd_DO & postcond & SP & do_arg_list		and
+     syn_ELSE		<= cmd_ELSE & Opt_SP				and
+     syn_FOR		<= cmd_FOR & Opt_SP				and
+     syn_FOR		<= cmd_FOR & SP & lvn & forparameter_List	and
+     syn_GOTO		<= cmd_GOTO & postcond & SP & goto_arg_List	and
+     syn_HALT		<= cmd_HALT & postcond & Opt_SP			and
+     syn_HANG		<= cmd_HANG & postcond & SP & hang_arg_List	and
+     syn_IF		<= cmd_IF & Opt_SP				and
+     syn_IF		<= cmd_IF & SP & if_arg_List			and
+     syn_JOB		<= cmd_JOB & postcond & SP & job_arg_List	and
+     syn_KILL		<= cmd_KILL & postcond & Opt_SP			and
+     syn_KILL		<= cmd_KILL & postcond & SP & kill_arg_List	and
+     syn_LOCK		<= cmd_LOCK & postcond & Opt_SP			and
+     syn_LOCK		<= cmd_LOCK & postcond & SP & lock_arg_List	and
+     syn_MERGE		<= cmd_MERGE & postcond & SP & merge_arg_List	and
+     syn_NEW		<= cmd_NEW & postcond & Opt_SP			and
+     syn_NEW		<= cmd_NEW & postcond & SP & new_arg_List	and
+     syn_OPEN		<= cmd_OPEN & postcond & SP & open_arg_List	and
+     syn_QUIT		<= cmd_QUIT & postcond & Opt_SP			and
+     syn_QUIT		<= cmd_QUIT & postcond & SP & expr		and
+--       syn_QUIT		<= cmd_QUIT & postcond & SP & "@ expratom V expr"
+     syn_READ		<= cmd_READ & postcond & SP & read_arg_List	and
+     syn_SET		<= cmd_SET & postcond & SP & set_arg_List	and
+     syn_TCOMMIT	<= cmd_TCOMMIT & postcond & Opt_SP		and
+     syn_TRESTART	<= cmd_TRESTART & postcond & Opt_SP		and
+     syn_TROLLBACK	<= cmd_TROLLBACK & postcond & Opt_SP		and
+     syn_TSTART		<= cmd_TSTART & postcond & Opt_SP		and
+     syn_TSTART		<= cmd_TSTART & postcond & SP & tstart_arg_List	and
+--       syn_TSTART		<= cmd_TSTART & postcond & SP & "@ expratom V tstartargument"		and
+     syn_USE		<= cmd_USE & postcond & SP & use_arg_List	and
+--       syn_VIEW		<= cmd_VIEW & postcond & "arguments unspecified" and
+     syn_WRITE		<= cmd_WRITE & postcond & SP & write_arg_List	and
+     syn_XECUTE		<= cmd_XECUTE & postcond & SP & xecute_arg_List	and
+--       syn_Z		<= cmd_Z & "arguments unspecified"		and
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
+     charset		<= name						and
      Temp_Token		<= EOF;
 --       Token		<= Basic_Token				and
 --       Token		<= Punctuation				and
