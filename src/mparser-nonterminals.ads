@@ -168,4 +168,60 @@ Package MParser.Nonterminals is
    syn_XECUTE            : aliased Class  := Get (Syntax_XECUTE);
    syn_Z                 : aliased Class  := Get (Syntax_Z);
 
+
+   -- Note:	The sequence, list, and optional nonterminals are populated by
+   --		side-effects of the calls to Get_Lists, Get_Options, and
+   --		Get_Sequences in the Intermediates child package.
+
+   -- List nonterminals.
+   Name_List,
+   Expr_List,
+   Actual_List,
+   Close_Arg_List,
+   Do_Arg_List,
+   forparameter_List,
+   goto_arg_List,
+   hang_arg_List,
+   if_arg_List,
+   job_arg_List,
+   kill_arg_List,
+   lock_arg_List,
+   merge_arg_List,
+   new_arg_List,
+   open_arg_List,
+   read_arg_List,
+   set_arg_List,
+   tstart_arg_List,
+   use_arg_List,
+   write_arg_List,
+   xecute_arg_List       : aliased Instance;
+
+   -- Sequence nonterminals.
+   Digit_Ident_Seq,
+   Line_Seq,
+   Space_Seq,
+   LI_Seq,
+   Graphic_Seq,
+   Digit_Seq,
+   Ext_Subtext_Seq,
+   Exprtail_Seq          : aliased Instance;
+
+   -- Optional nonterminals.
+   Opt_Label,
+   Opt_LI_Seq,
+   Opt_SP_Seq,
+   Opt_SP,
+   Opt_Name_List,
+   Opt_Exprtail_Seq,
+   Opt_Tick,
+   Opt_Environment,
+   Opt_PrnExp_List,
+   Opt_Env_Bar,
+   Opt_Exponent,
+   Opt_Colon_TVExpr,
+   Opt_Caret_Routineref,
+   Opt_Plus_IntExpr,
+   Opt_DotExpr_or_AName,
+   Opt_actual_List       : aliased Instance;
+
 End MParser.Nonterminals;

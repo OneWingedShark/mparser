@@ -1,18 +1,15 @@
 With
 -- Needed MParser children.
 MParser.Tokens,
-MParser.Internals.Tokenizer,
-MParser.Nonterminals,
 MParser.Terminals,
+MParser.Internals.Tokenizer,
+MParser.Nonterminals.Intermediates,
 
 -- Needed Internals children.
 MParser.Internals.Token_List,
-MParser.Internals.Nonterminal,
-MParser.Internals.Production_List,
 MParser.Internals.Production,
-MParser.Internals.Sequence_Builder,
-MParser.Internals.Option_Builder,
-MParser.Internals.List_Builder
+MParser.Internals.Nonterminal,
+MParser.Internals.Production_List
 ;
 
 Function MParser.Internals.Get_Grammer return Production_List.Instance is
@@ -20,181 +17,23 @@ Function MParser.Internals.Get_Grammer return Production_List.Instance is
    -- Bring Terminals and Nonterminals into direct visibility.
    use MParser.Terminals, MParser.Nonterminals;
 
-   Function Make_List(
-      Token_ID        :     MUMPS_Token;
-      Item            :     MParser.Tokens.Class;
-      Productions     : out Production_List.Instance;
-      List_Action     :     Tokens.Action := Null
-     ) return Nonterminal.Class is
-     (List_Builder(Token_ID, Comma, Item, Productions, List_Action));
-
-
-   -- NOTE:	when we move the sequences, lists, and options to nonterminals,
-   --		we can hide the individual production-lists and expose "and"-ed
-   --		collections to the package spec.
-   --	Production_List_for_Sequences,
-   --	Production_List_for_Lists,
-   --	Production_List_for_Optionals : constant Production_List.Instance;
-
-   -- Sequence production-lists.
-   Seq_of_Digit_or_Ident,
-   Seq_of_Line,
-   Seq_of_Space,
-   Seq_of_LI,
-   Seq_of_Graphic,
-   Seq_of_Digit,
-   Seq_of_Ext_Subtext,
-   Seq_of_ExprTail
-   : Production_List.Instance;
-
-   -- Sequence nonterminals.
-   Digit_Ident_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Digit_or_Ident, Digit_or_Ident, Seq_of_Digit_or_Ident);
-   Line_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Line, Line, Seq_of_Line);
-   Space_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Space, SP, Seq_of_Space);
-   LI_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_LI, LI, Seq_of_LI);
-   Graphic_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Graphic, Graphic, Seq_of_Graphic);
-   Digit_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Digit, Digit, Seq_of_Digit);
-   Ext_Subtext_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_Ext_Subtext, Ext_Subtext, Seq_of_Ext_Subtext);
-   Exprtail_Seq : aliased Nonterminal.Class:=
-     Sequence_Builder(S_ExprTail, ExprTail, Seq_of_ExprTail);
-
-   -- List production-lists.
-   List_of_Name,
-   List_of_Expr,
-   List_of_Actual,
-   List_of_Closeargument,
-   List_of_Doargument,
-   List_of_Forparameter,
-   List_of_Gotoargument,
-   List_of_Hangargument,
-   List_of_Ifargument,
-   List_of_Jobargument,
-   List_of_Killargument,
-   List_of_Lockargument,
-   List_of_Mergeargument,
-   List_of_Newargument,
-   List_of_Openargument,
-   List_of_Readargument,
-   List_of_Setargument,
-   List_of_Tstartarg,
-   List_of_Useargument,
-   List_of_Writeargument,
-   List_of_Xecutearg
-   : Production_List.Instance;
-
-   -- List nonterminals.
-   Name_List : aliased Nonterminal.Class:=
-     Make_List(L_Name, Name, List_of_Name);
-   Expr_List : aliased Nonterminal.Class:=
-     Make_List(L_Expr, Expr, List_of_Expr);
-   Actual_List : aliased Nonterminal.Class:=
-     Make_List(L_Actual, Actual, List_of_Actual);
-   Close_Arg_List : aliased Nonterminal.Class:=
-     Make_List(L_Close_Arg, CloseArgument, List_of_Closeargument);
-   Do_Arg_List : aliased Nonterminal.Class:=
-     Make_List(L_Do_Arg, DoArgument, List_of_Doargument);
-   forparameter_List : aliased Nonterminal.Class:=
-     Make_List(L_forparameter, ForParameter, List_of_Forparameter);
-   goto_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_gotoargument, gotoargument, List_of_gotoargument);
-   hang_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_hangargument, hangargument, List_of_hangargument);
-   if_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_ifargument, ifargument, List_of_ifargument);
-   job_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_jobargument, jobargument, List_of_jobargument);
-   kill_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_killargument, killargument, List_of_killargument);
-   lock_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_lockargument, lockargument, List_of_Lockargument);
-   merge_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_mergeargument, mergeargument, List_of_Mergeargument);
-   new_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_newargument, newargument, List_of_Newargument);
-   open_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_openargument, openargument, List_of_Openargument);
-   read_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_readargument, readargument, List_of_Readargument);
-   set_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_setargument, setargument, List_of_Setargument);
-   tstart_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_tstartargument, tstartargument, List_of_Tstartarg);
-   use_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_useargument, useargument, List_of_Useargument);
-   write_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_writeargument, writeargument, List_of_Writeargument);
-   xecute_arg_List : aliased Nonterminal.Class:=
-     Make_List(L_xecute, xecuteargument, List_of_Xecutearg);
-
-   -- Optional production-lists.
-   Option_of_Label,
-   Option_of_LI_Seq,
-   Option_of_SP_Seq,
-   Option_of_SP,
-   Option_of_Name_List,
-   Option_of_Exptail_Seq,
-   Option_of_Tick,
-   Option_of_Environment,
-   Option_of_PrnExpr_Lst,
-   Option_of_Env_Bar,
-   Option_of_Exponent,
-   Option_of_ColonTVExpr,
-   Option_of_Crt_RtnRef,
-   Option_of_PlusIntExpr,
-   Option_of_DtExp_AName,
-   Option_of_Actual_List
-   : Production_List.Instance;
-
-   -- Optional nonterminals.
-   Opt_Label : aliased Nonterminal.Class:=
-     Option_Builder(O_Label, Label, Option_of_Label);
-   Opt_LI_Seq : aliased Nonterminal.Class:=
-     Option_Builder(O_LI_Seq, LI, Option_of_LI_Seq);
-   Opt_SP_Seq : aliased Nonterminal.Class:=
-     Option_Builder(O_SP_Seq, Space_Seq, Option_of_SP_Seq);
-   Opt_SP : aliased Nonterminal.Class:=
-     Option_Builder(O_SP, SP, Option_of_SP);
-   Opt_Name_List : aliased Nonterminal.Class:=
-     Option_Builder(O_Name_List, Name_List, Option_of_Name_List);
-   Opt_Exprtail_Seq : aliased Nonterminal.Class:=
-     Option_Builder(O_Exprtail_Seq, Exprtail_Seq, Option_of_Exptail_Seq);
-   Opt_Tick : aliased Nonterminal.Class:=
-     Option_Builder(O_Tick, Tick, Option_of_Tick);
-   Opt_Environment : aliased Nonterminal.Class:=
-     Option_Builder(O_Environment, Environment, Option_of_Environment);
-   Opt_PrnExp_List : aliased Nonterminal.Class:=
-     Option_Builder(O_Paren_Expr_List, Paren_Expr_List, Option_of_PrnExpr_Lst);
-   Opt_Env_Bar : aliased Nonterminal.Class:=
-     Option_Builder(O_Env_Bar, Env_Bar, Option_of_Env_Bar);
-   Opt_Exponent : aliased Nonterminal.Class:=
-     Option_Builder(O_Exponent, exponent, Option_of_Exponent);
-   Opt_Colon_TVExpr : aliased Nonterminal.Class:=
-     Option_Builder(O_Colon_TVExpr, Colon_TVExpr, Option_of_ColonTVExpr);
-   Opt_Caret_Routineref : aliased Nonterminal.Class:=
-     Option_Builder(O_Caret_Routineref, Caret_Routineref, Option_of_Crt_RtnRef);
-   Opt_Plus_IntExpr : aliased Nonterminal.Class:=
-     Option_Builder(O_Plus_IntExpr, Plus_IntExpr, Option_of_PlusIntExpr);
-   Opt_DotExpr_or_AName : aliased Nonterminal.Class:=
-     Option_Builder(O_DotExpr_or_AName, DotExpr_or_AName, Option_of_DtExp_AName);
-   Opt_actual_List : aliased Nonterminal.Class:=
-     Option_Builder(O_actual_List, Actual_List, Option_of_Actual_List);
-
-   -- Renames.
-   LS : Nonterminal.Class renames Space_Seq;
-   CS : Nonterminal.Class renames LS;
-
    -- Bring "&", "+", "<=", and "and" into direct visibility.
    use type Token_List.Instance;
    use type Production.Right_Hand_Side;
    use type Production.Instance;
    use type Production_List.Instance;
+
+   -- NOTE:	The renames and constants here are  written so as to ensure the
+   --		proper ordering is preserved.
+   PL_Lists     : Production_List.Instance renames Intermediates.Get_Lists;
+   PL_Sequences : Production_List.Instance renames Intermediates.Get_Sequences;
+   PL_Options   : Production_List.Instance renames Intermediates.Get_Options;
+   All_Production_Lists : constant Production_List.Instance :=
+     				PL_Lists and PL_Sequences and PL_Options;
+
+   -- Renames.
+   LS : Nonterminal.Class renames Nonterminal.Class(Space_Seq);
+   CS : Nonterminal.Class renames LS;
 
 Begin
    Return Grammar : constant Production_List.Instance :=
@@ -236,35 +75,6 @@ Begin
      Ext_Subtext	<= eol & Amp & ls & Graphic_Seq			and
      Paren_Expr_List	<= LParen & Expr_List & RParen			and
      Env_Bar		<= Bar & Environment & Bar			and
-     -- Sequences.
-     Seq_of_Digit_or_Ident and
-     Seq_of_Line	   and
-     Seq_of_Space	   and
-     Seq_of_LI		   and
-     Seq_of_Graphic	   and
-     Seq_of_Digit	   and
-     Seq_of_Ext_Subtext	   and
-     Seq_of_ExprTail	   and
-     -- Optionals.
-     Option_of_Label	   and
-     Option_of_Name_List   and
-     Option_of_LI_Seq	   and
-     Option_of_SP_Seq	   and
-     Option_of_SP	   and
-     Option_of_Exptail_Seq and
-     Option_of_Tick	   and
-     Option_of_Environment and
-     Option_of_PrnExpr_Lst and
-     Option_of_Env_Bar	   and
-     Option_of_Exponent	   and
-     Option_of_ColonTVExpr and
-     Option_of_Crt_RtnRef  and
-     Option_of_PlusIntExpr and
-     Option_of_DtExp_AName and
-     Option_of_Actual_List and
-     -- Lists.
-     List_of_Name	   and
-     List_of_Expr	   and
      -- Normal Productions.
      routine		<= routinehead & routinebody			and
      routinehead	<= routinename & EOL				and
@@ -337,63 +147,21 @@ Begin
      namevalue		<= expr						and
      -- TODO: 7.2.3 Pattern match pattern
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-     cmd_BREAK		<= LC_BREAK					and
-     cmd_BREAK		<= SC_BREAK					and
-     cmd_CLOSE		<= LC_CLOSE					and
-     cmd_CLOSE		<= SC_CLOSE					and
-     cmd_DO		<= LC_DO					and
-     cmd_DO		<= SC_DO					and
-     cmd_ELSE		<= LC_ELSE					and
-     cmd_ELSE		<= SC_ELSE					and
-     cmd_FOR		<= LC_FOR					and
-     cmd_FOR		<= SC_FOR					and
-     cmd_GOTO		<= LC_GOTO					and
-     cmd_GOTO		<= SC_GOTO					and
-     cmd_HALT		<= LC_HALT					and
-     cmd_HALT		<= SC_HALT					and
-     cmd_HANG		<= LC_HANG					and
-     cmd_HANG		<= SC_HANG					and
-     cmd_IF		<= LC_IF					and
-     cmd_IF		<= SC_IF					and
-     cmd_JOB		<= LC_JOB					and
-     cmd_JOB		<= SC_JOB					and
-     cmd_KILL		<= LC_KILL					and
-     cmd_KILL		<= SC_KILL					and
-     cmd_LOCK		<= LC_LOCK					and
-     cmd_LOCK		<= SC_LOCK					and
-     cmd_MERGE		<= LC_MERGE					and
-     cmd_MERGE		<= SC_MERGE					and
-     cmd_NEW		<= LC_NEW					and
-     cmd_NEW		<= SC_NEW					and
-     cmd_OPEN		<= LC_OPEN					and
-     cmd_OPEN		<= SC_OPEN					and
-     cmd_QUIT		<= LC_QUIT					and
-     cmd_QUIT		<= SC_QUIT					and
-     cmd_READ		<= LC_READ					and
-     cmd_READ		<= SC_READ					and
-     cmd_SET		<= LC_SET					and
-     cmd_SET		<= SC_SET					and
-     cmd_TCOMMIT	<= LC_TCOMMIT					and
-     cmd_TCOMMIT	<= SC_TCOMMIT					and
-     cmd_TRESTART	<= LC_TRESTART					and
-     cmd_TRESTART	<= SC_TRESTART					and
-     cmd_TROLLBACK	<= LC_TROLLBACK					and
-     cmd_TROLLBACK	<= SC_TROLLBACK					and
-     cmd_TSTART		<= LC_TSTART					and
-     cmd_TSTART		<= SC_TSTART					and
-     cmd_USE		<= LC_USE					and
-     cmd_USE		<= SC_USE					and
-     cmd_VIEW		<= LC_VIEW					and
-     cmd_VIEW		<= SC_VIEW					and
-     cmd_WRITE		<= LC_WRITE					and
-     cmd_WRITE		<= SC_WRITE					and
-     cmd_XECUTE		<= LC_XECUTE					and
-     cmd_XECUTE		<= SC_XECUTE					and
-     cmd_Z		<= SC_Z						and
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
+     -----------------------------
+     --  Include Intermediates  --
+     -----------------------------
+     All_Production_Lists						and
+
+     ------------------------
+     --  Include Commands  --
+     ------------------------
+     Intermediates.Command_Productions					and
+
+     ------------------------------
+     --  Include Command Syntax  --
+     ------------------------------
+     Intermediates.Command_Syntax					and
+
 
      -- TODO: 8.1 General command rules (B) -- command ::= ...
      postcond		<= Opt_Colon_TVExpr				and
@@ -421,59 +189,7 @@ Begin
      actualname		<= name						and
 --       actualname		::= @ expratom V actualname
 
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-     syn_BREAK		<= cmd_BREAK & postcond & Opt_SP		and
-     syn_CLOSE		<= cmd_CLOSE & postcond & SP & close_arg_List	and
-     syn_DO		<= cmd_DO & postcond & Opt_SP			and
-     syn_DO		<= cmd_DO & postcond & SP & do_arg_list		and
-     syn_ELSE		<= cmd_ELSE & Opt_SP				and
-     syn_FOR		<= cmd_FOR & Opt_SP				and
-     syn_FOR		<= cmd_FOR & SP & lvn & forparameter_List	and
-     syn_GOTO		<= cmd_GOTO & postcond & SP & goto_arg_List	and
-     syn_HALT		<= cmd_HALT & postcond & Opt_SP			and
-     syn_HANG		<= cmd_HANG & postcond & SP & hang_arg_List	and
-     syn_IF		<= cmd_IF & Opt_SP				and
-     syn_IF		<= cmd_IF & SP & if_arg_List			and
-     syn_JOB		<= cmd_JOB & postcond & SP & job_arg_List	and
-     syn_KILL		<= cmd_KILL & postcond & Opt_SP			and
-     syn_KILL		<= cmd_KILL & postcond & SP & kill_arg_List	and
-     syn_LOCK		<= cmd_LOCK & postcond & Opt_SP			and
-     syn_LOCK		<= cmd_LOCK & postcond & SP & lock_arg_List	and
-     syn_MERGE		<= cmd_MERGE & postcond & SP & merge_arg_List	and
-     syn_NEW		<= cmd_NEW & postcond & Opt_SP			and
-     syn_NEW		<= cmd_NEW & postcond & SP & new_arg_List	and
-     syn_OPEN		<= cmd_OPEN & postcond & SP & open_arg_List	and
-     syn_QUIT		<= cmd_QUIT & postcond & Opt_SP			and
-     syn_QUIT		<= cmd_QUIT & postcond & SP & expr		and
---       syn_QUIT		<= cmd_QUIT & postcond & SP & "@ expratom V expr"
-     syn_READ		<= cmd_READ & postcond & SP & read_arg_List	and
-     syn_SET		<= cmd_SET & postcond & SP & set_arg_List	and
-     syn_TCOMMIT	<= cmd_TCOMMIT & postcond & Opt_SP		and
-     syn_TRESTART	<= cmd_TRESTART & postcond & Opt_SP		and
-     syn_TROLLBACK	<= cmd_TROLLBACK & postcond & Opt_SP		and
-     syn_TSTART		<= cmd_TSTART & postcond & Opt_SP		and
-     syn_TSTART		<= cmd_TSTART & postcond & SP & tstart_arg_List	and
---       syn_TSTART		<= cmd_TSTART & postcond & SP & "@ expratom V tstartargument"		and
-     syn_USE		<= cmd_USE & postcond & SP & use_arg_List	and
---       syn_VIEW		<= cmd_VIEW & postcond & "arguments unspecified" and
-     syn_WRITE		<= cmd_WRITE & postcond & SP & write_arg_List	and
-     syn_XECUTE		<= cmd_XECUTE & postcond & SP & xecute_arg_List	and
---       syn_Z		<= cmd_Z & "arguments unspecified"		and
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
      charset		<= name						and
      Temp_Token		<= EOF;
---       Token		<= Basic_Token				and
---       Token		<= Punctuation				and
---       Token		<= Whitespace				and
---
---       Basic_Token	<= Keyword				and
---       Basic_Token	<= Name					and
---       Basic_Token	<= Integer_Type				and
---       Basic_Token	<= Rational_Type			and
---       Basic_Token	<= String_Type;--				and
-     --S_Prime       <= Specification & EOF and
-     --Specification <= EOF + Nonterminal.Synthesize_Self;
+
 End MParser.Internals.Get_Grammer;
